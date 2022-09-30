@@ -16,7 +16,7 @@ export type CartItemType = {
   image: string
   price: number
   title: string
-  amount: number
+  quantity: number
 }
 
 const getProducts = async (): Promise<CartItemType[]> => {
@@ -31,12 +31,14 @@ const App = () => {
   console.log(data)
 
   const getTotalItems = (items: CartItemType[]) => {
-    return items.reduce((ack: number, item) => ack + item.amount, 0)
+    return items.reduce((ack: number, item) => ack + item.quantity, 0)
   }
 
-  const handleAddToCart = (clickedItem: CartItemType) => null
+  const handleAddToCart = (clickedItem: CartItemType) => {
+    setCartItems()
+  }
 
-  const handleRemoveFromCart = () => null
+  const handleRemoveFromCart = (id: number) => null
 
   if (isLoading) return <LinearProgress />
 
@@ -45,7 +47,7 @@ const App = () => {
   return (
     <Wrapper>
       <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
-        <Cart />
+        <Cart cartItems={cartItems} addToCart={handleAddToCart} removeFromCart={handleRemoveFromCart} />
       </Drawer>
       <StyledButton onClick={() => setCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color="error">
