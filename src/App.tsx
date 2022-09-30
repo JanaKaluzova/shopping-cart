@@ -35,10 +35,27 @@ const App = () => {
   }
 
   const handleAddToCart = (clickedItem: CartItemType) => {
-    setCartItems()
+    setCartItems((prev) => {
+      const isItemInCart = prev.find((item) => item.id === clickedItem.id)
+      if (isItemInCart) {
+        return prev.map((item) => (item.id === clickedItem.id ? { ...item, quantity: item.quantity + 1 } : item))
+      }
+      return [...prev, { ...clickedItem, quantity: 1 }]
+    })
   }
 
-  const handleRemoveFromCart = (id: number) => null
+  const handleRemoveFromCart = (id: number) => {
+    setCartItems((prev) =>
+      prev.reduce((ack, item) => {
+        if (item.id === id) {
+          if (item.quantity === 1) return ack
+          return [...ack, { ...item, quantity: item.quantity - 1 }]
+        } else {
+          return [...ack, item]
+        }
+      }, [] as CartItemType[])
+    )
+  }
 
   if (isLoading) return <LinearProgress />
 
