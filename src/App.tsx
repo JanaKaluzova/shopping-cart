@@ -7,6 +7,7 @@ import { useQuery } from 'react-query'
 import { Wrapper, StyledButton } from './App.styles'
 import Item from './Item/Item'
 import Badge from '@mui/material/Badge'
+import Cart from './Cart/Cart'
 
 export type CartItemType = {
   id: number
@@ -29,7 +30,9 @@ const App = () => {
   const { data, isLoading, error } = useQuery<CartItemType[]>('products', getProducts)
   console.log(data)
 
-  const getTotalItems = (items: CartItemType[]) => null
+  const getTotalItems = (items: CartItemType[]) => {
+    return items.reduce((ack: number, item) => ack + item.amount, 0)
+  }
 
   const handleAddToCart = (clickedItem: CartItemType) => null
 
@@ -42,7 +45,7 @@ const App = () => {
   return (
     <Wrapper>
       <Drawer anchor="right" open={cartOpen} onClose={() => setCartOpen(false)}>
-        Cart goes here
+        <Cart />
       </Drawer>
       <StyledButton onClick={() => setCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color="error">
